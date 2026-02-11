@@ -12,12 +12,12 @@ class DatabaseInstallCommand extends Command
 
     protected function handle()
     {
-        $host = _env('DB_HOST');
-        $user = _env('DB_USERNAME');
-        $password = _env('DB_PASSWORD');
-        $database = _env('DB_DATABASE');
-        $dbConnection = _env('DB_CONNECTION', 'mysql');
-        $port = empty(_env('DB_PORT')) ? 3306 : _env('DB_PORT');
+        $dbConnection = _env('DB_CONNECTION', MvcConfig('database')['default']);
+        $host = _env('DB_HOST', MvcConfig('database')['connections'][$dbConnection]['host']);
+        $user = _env('DB_USERNAME', MvcConfig('database')['connections'][$dbConnection]['username']);
+        $password = _env('DB_PASSWORD', MvcConfig('database')['connections'][$dbConnection]['password']);
+        $database = _env('DB_DATABASE', MvcConfig('database')['connections'][$dbConnection]['database']);
+        $port = _env('DB_PORT', MvcConfig('database')['connections'][$dbConnection]['port']);
 
         if ($dbConnection === 'sqlite') {
             if (!file_exists($database)) {
